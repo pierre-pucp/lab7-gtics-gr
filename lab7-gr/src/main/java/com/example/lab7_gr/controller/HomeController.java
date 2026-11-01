@@ -10,7 +10,7 @@ public class HomeController {
 
     @GetMapping("")
     public String paginaInicio() {
-        return "inicio";
+        return "init";
     }
 
 }

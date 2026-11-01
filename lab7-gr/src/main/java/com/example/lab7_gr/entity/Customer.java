@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "customer")
+@Table(name = "customer", uniqueConstraints = @UniqueConstraint(columnNames = "document"))
 public class Customer {
 
     public enum DocumentType { DNI, RUC }
@@ -24,13 +24,25 @@ public class Customer {
     @Column(name = "name", length = 100)
     private String name;
 
-    @Size(max=11)
-    @Column(name = "document", length = 11)
+    @NotBlank
+    @Column(name = "document")
+    @Pattern(regexp = "^[0-9]+$")
     private String document;
 
+    @NotNull
     @Size(max=10)
     @Column(name = "document_type", length = 10)
     private DocumentType documentType;
+
+    @AssertTrue(message = "El DNI debe tener 8 dígitos o el RUC 11 dígitos")
+    public boolean validDocument() {
+        if ("DNI".equalsIgnoreCase(documentType)) {
+            return document.length() == 8;
+        } else if ("RUC".equalsIgnoreCase(documentType)) {
+            return document.length() == 11;
+        }
+        return false;
+    }
 
 }
 

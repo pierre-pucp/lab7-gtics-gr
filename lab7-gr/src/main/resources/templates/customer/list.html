@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Clientes</title>
+</head>
+<body>
+<div th:insert="~{fragments/general :: navbar}"></div>
+
+<div>
+    <h1>Lista de clientes</h1>
+    <div>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Documento</th>
+                <th>Tipo de documento</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="c : ${listaClientes}">
+                <td th:text="${c.id}">0</td>
+                <td th:text="${c.name}">Carlos</td>
+                <td th:text="${c.document}">99999999</td>
+                <td th:text="${c.documentType}">DNI</td>
+                <td>
+                    <a th:href="@{/clientes/editar(id=${c.id})}">Editar</a>
+                    <a th:href="@{/clientes/borrar(id=${c.id})}">Borrar</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
