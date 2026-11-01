@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista Clientes</title>
+</head>
+<body>
+<div th:insert="~{fragments/general :: navbar}"></div>
+
+<div>
+    <h1>Informaciones de cliente</h1>
+    <div>
+        <div role="alert" th:if="${msg != null}" th:text="${msg}">Alerta</div>
+        <form method="post" th:action="@{'/clientes/guardar'}" th:object="${customer}">
+
+            <input th:field="*{id}" type="hidden"/>
+            <div>
+                <label>Nombre del cliente</label>
+                <input th:field="*{name}" type="text" th:classappend="${#fields.hasErrors('name')?'is-invalid':''}"/>
+                <div th:if="${#fields.hasErrors('productname')}" th:errors="*{productname}">Mensaje de error de name</div>
+            </div>
+            <div>
+                <label>Documento</label>
+                <select name="supplier" th:field="*{supplier}">
+                    <option th:value="${…}">DNI</option>
+                    <option th:value="${…}">RUC</option>
+                </select>
+            </div>
+            <a th:href="@{'/clientes'}">Cancelar</a>
+            <button type="submit" th:text="${product.id==0? 'Guardar':'Actualizar'}">Actualizar</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
