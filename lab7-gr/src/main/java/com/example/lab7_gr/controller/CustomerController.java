@@ -2,10 +2,13 @@ package com.example.lab7_gr.controller;
 
 import com.example.lab7_gr.entity.Customer;
 import com.example.lab7_gr.repository.CustomerRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,7 @@ public class CustomerController {
     @GetMapping("/crear")
     public String createCustomer(@ModelAttribute("customer") Customer c,
                                 Model model) {
+        model.addAttribute("customer", c);
         return "customer/edit";
     }
 
@@ -48,8 +52,19 @@ public class CustomerController {
                             BindingResult bindingResult,
                             RedirectAttributes attr,
                             Model model) {
+
+        if (c.getId()==null && customerRepository.existsByDocument(c.getDocument())) {
+            bindingResult.rejectValue("document", "duplicate.document", "Este documento ya esta asociado a un cliente");
+        }
+        if (c.getDocumentType() != null && c.getDocument() != null) {
+            if (c.getDocumentType() == Customer.DocumentType.DNI && c.getDocument().length() != 8) {
+                bindingResult.rejectValue("document", "size.document", "El DNI debe tener exactamente 8 dígitos");
+            } else if (c.getDocumentType() == Customer.DocumentType.RUC && c.getDocument().length() != 11) {
+                bindingResult.rejectValue("document", "size.document", "El RUC debe tener exactamente 11 dígitos");
+            }
+        }
         if (!bindingResult.hasErrors()) {
-            if (c.getId() == 0) {
+            if (c.getId() == null || c.getId() == 0) {
                 attr.addFlashAttribute("msg", "Producto creado exitosamente");
             } else {
                 attr.addFlashAttribute("msg", "Producto actualizado exitosamente");
@@ -57,6 +72,7 @@ public class CustomerController {
             customerRepository.save(c);
             return "redirect:/clientes";
         } else {
+            model.addAttribute("customer", c);
             return "customer/edit";
         }
     }

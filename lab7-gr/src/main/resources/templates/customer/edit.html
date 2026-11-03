@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Lista Clientes</title>
@@ -12,22 +12,26 @@
     <div>
         <div role="alert" th:if="${msg != null}" th:text="${msg}">Alerta</div>
         <form method="post" th:action="@{'/clientes/guardar'}" th:object="${customer}">
-
             <input th:field="*{id}" type="hidden"/>
             <div>
                 <label>Nombre del cliente</label>
                 <input th:field="*{name}" type="text" th:classappend="${#fields.hasErrors('name')?'is-invalid':''}"/>
-                <div th:if="${#fields.hasErrors('productname')}" th:errors="*{productname}">Mensaje de error de name</div>
+                <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">Mensaje de error de name</div>
             </div>
             <div>
-                <label>Documento</label>
-                <select name="supplier" th:field="*{supplier}">
-                    <option th:value="${…}">DNI</option>
-                    <option th:value="${…}">RUC</option>
+                <label>Tipo de documento</label>
+                <select name="document" th:field="*{documentType}">
+                    <option value="DNI">DNI</option>
+                    <option value="RUC">RUC</option>
                 </select>
             </div>
+            <div>
+                <label>Numero de documento</label>
+                <input th:field="*{document}" type="text" th:classappend="${#fields.hasErrors('document')?'is-invalid':''}"/>
+                <div th:if="${#fields.hasErrors('document')}" th:errors="*{document}">Mensaje de error de documento</div>
+            </div>
             <a th:href="@{'/clientes'}">Cancelar</a>
-            <button type="submit" th:text="${product.id==0? 'Guardar':'Actualizar'}">Actualizar</button>
+            <button type="submit" th:text="${(customer.id==0 || customer.id==null)? 'Guardar':'Actualizar'}">Actualizar</button>
         </form>
     </div>
 </div>
